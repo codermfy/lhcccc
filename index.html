@@ -55,6 +55,12 @@ t.exports=function(){"use strict";function t(t){t=t||{};var n=arguments.length,s
       label="下注的个数"
       placeholder="下注的个数"
     ></van-field>
+      <van-field
+      v-model="total"
+      type="digit"
+      label="总注数"
+      placeholder="总注数"
+    ></van-field>
 
     <van-field
       v-model="failTimes"
@@ -76,6 +82,7 @@ t.exports=function(){"use strict";function t(t){t=t||{};var n=arguments.length,s
     <table class="mytable" border="1" cellspacing="0">
       <tr>
         <th>次数</th>
+        <th>成功概率</th>
         <th>单一注成本</th>
         <th>该次成本</th>
         <th>若成功后收益</th>
@@ -84,6 +91,7 @@ t.exports=function(){"use strict";function t(t){t=t||{};var n=arguments.length,s
       </tr>
       <tr v-for="(item,index) in list" :key="index">
         <td>{{item.index}}</td>
+        <td>{{item.successPercent}}%</td>
         <td>{{item.perCB}}</td>
         <td>{{item.CB}}</td>
         <td>{{item.success}}</td>
@@ -103,7 +111,7 @@ t.exports=function(){"use strict";function t(t){t=t||{};var n=arguments.length,s
           moneyPerDay:300,
           mult:45,
           downNum:16,
-
+          total:49,
           failTimes:10,
           drawTimes:0,
           list:[
@@ -122,6 +130,7 @@ t.exports=function(){"use strict";function t(t){t=t||{};var n=arguments.length,s
           for(let i=1;i<=this.failTimes;i++){
             let obj={
               index:i,
+              successPercent:'',
               perCB:0,
               CB:0,
               success:0,
@@ -141,13 +150,16 @@ t.exports=function(){"use strict";function t(t){t=t||{};var n=arguments.length,s
             
 
             totalCB+=x*16;
+            obj.successPercent=(1-Math.pow(1-(this.downNum/this.total),i))*100
 obj.perCB=x.toFixed(2);
 obj.CB=(x*this.downNum).toFixed(2);
 obj.success=(x*this.mult).toFixed(2);
 obj.pure=((x*this.mult)-totalCB).toFixed(2)
 obj.currentCB=totalCB.toFixed(2)
 this.list.push(obj)
+// console.log(obj.successPercent)
           }
+
  
 
     },

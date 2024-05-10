@@ -31793,6 +31793,7 @@
           // B:'',
           //   }
           this.test(this.allMoney, this.moneyPerDay, this.mult);
+          // console.log(this.getList(150,17))
         },
         test(allMoney = 50000, hope = 300, mult = 45) {
           this.list = [];
@@ -31839,7 +31840,8 @@
             day: 0,
           };
           let set = new Set();
-          let i = 1;
+          let sxList=[];
+          let i = 0;
           // Math.floor(Math.random()*49)+1
           while (1) {
             let objjj = {
@@ -31850,8 +31852,8 @@
               B: "",
               allMoney:0
             };
-            //当日生肖
-            let checkNum = Math.floor(Math.random() * 49) + 1;
+            if(i==0){
+              let checkNum = Math.floor(Math.random() * 49) + 1;
             let checkSX;
             for (let key in Obj) {
               if (Obj[key].includes(checkNum)) {
@@ -31859,48 +31861,20 @@
               }
             }
             set.add(checkSX);
-            // console.log(checkNum,checkSX)
+
             objjj.luckyNum=checkNum;
             objjj.luckySX=checkSX;
-
+            objjj.allMoney=allMoney;
+            this.list.push(objjj)
+            i+=1;
+              continue;
+            }
             A.day += 1;
             B.day += 1;
             // console.log(`第${i}天开始`);
             // console.log(`第${i}天,幸运数字${checkNum},对应生肖为${checkSX}`);
+            
             if (A.chooseNum.length) {
-              //中奖了
-              if (A.chooseNum.includes(checkNum)) {
-                let checkMoney =
-                  Number(
-                    this.getList(hope / 2, A.chooseNum.length, A.day, mult)[
-                      A.day - 2
-                    ].pure
-                  ) +
-                  Number(
-                    this.getList(hope / 2, A.chooseNum.length, A.day, mult)[
-                      A.day - 2
-                    ].currentCB
-                  );
-                allMoney += checkMoney;
-                // console.log(
-                //   `A组中了，压了${A.chooseSX.toString()},获得${checkMoney},余额${allMoney.toFixed(
-                //     2
-                //   )}`
-                // );
-                objjj.A+=`A组中了，压了${A.chooseSX.toString()},获得${checkMoney.toFixed(2)},余额${allMoney.toFixed(
-                    2
-                  )};\n`
-                for (let sx of A.chooseSX) {
-                  set.delete(sx);
-                }
-                A = {
-                  chooseNum: [],
-                  chooseSX: [],
-                  useMoney: 0,
-                  day: 1,
-                };
-                set.add(checkSX);
-              } else {
                 //没中
                 A.useMoney = Number(
                   this.getList(hope / 2, A.chooseNum.length, A.day, mult)[A.day - 1]
@@ -31912,12 +31886,12 @@
                 //     A.useMoney
                 //   },余额${allMoney.toFixed(2)}`
                 // );
-                objjj.A+=`A组没中，压了${A.chooseSX.toString()},加大投入，花费${
+                objjj.A+=`A组昨天没中，压了${A.chooseSX.toString()},加大投入，花费${
                     A.useMoney.toFixed(2)
                   },余额${allMoney.toFixed(2)};\n`
-              }
+              
             }
-            if (!A.chooseNum.length) {
+            else{
               let count = 0;
               while (1) {
                 let index = Math.floor(Math.random() * 12);
@@ -31941,44 +31915,19 @@
               //     2
               //   )}，余额${allMoney.toFixed(2)}`
               // );
-              objjj.A+=`A组本轮结束,A组重新下注，压了${A.chooseSX.toString()},花费${A.useMoney.toFixed(
+              objjj.A+=`A组重新下注，压了${A.chooseSX.toString()},花费${A.useMoney.toFixed(
                   2
-                )}，余额${allMoney.toFixed(2)};`
-            }
-            if (B.chooseNum.length) {
-              //中奖了
-              if (B.chooseNum.includes(checkNum)) {
-                let checkMoney =
-                  Number(
-                    this.getList(hope / 2, B.chooseNum.length, B.day, mult)[
-                      B.day - 2
-                    ].pure
-                  ) +
-                  Number(
-                    this.getList(hope / 2, B.chooseNum.length, B.day, mult)[
-                      B.day - 2
-                    ].currentCB
-                  );
-                allMoney += checkMoney;
-                // console.log(
-                //   `B组中了，压了${B.chooseSX.toString()},获得${checkMoney},余额${allMoney.toFixed(
-                //     2
-                //   )}`
-                // );
-                objjj.B+=`B组中了，压了${B.chooseSX.toString()},获得${checkMoney.toFixed(2)},余额${allMoney.toFixed(
-                    2
-                  )};\n`
-                for (let sx of B.chooseSX) {
-                  set.delete(sx);
+                )}，余额${allMoney.toFixed(2)};\n`
+                if(this.list[i-1]&&this.list[i-1].luckySX){
+                  set.delete(this.list[i-1].luckySX);
                 }
-                B = {
-                  chooseNum: [],
-                  chooseSX: [],
-                  useMoney: 0,
-                  day: 1,
-                };
-                set.add(checkSX);
-              } else {
+            }
+            
+           
+            
+            
+            
+            if (B.chooseNum.length) {
                 //没中
                 B.useMoney = Number(
                   this.getList(hope / 2, B.chooseNum.length, B.day, mult)[B.day - 1]
@@ -31990,12 +31939,12 @@
                 //     B.useMoney
                 //   },余额${allMoney.toFixed(2)}`
                 // );
-                objjj.B+= `B组没中，压了${B.chooseSX.toString()},加大投入，花费${
+                objjj.B+= `B组昨天没中，压了${B.chooseSX.toString()},加大投入，花费${
                     B.useMoney.toFixed(2)
                   },余额${allMoney.toFixed(2)};\n`
-              }
+              
             }
-            if (!B.chooseNum.length) {
+            else{
               let count = 0;
               while (1) {
                 let index = Math.floor(Math.random() * 12);
@@ -32019,19 +31968,110 @@
               //     2
               //   )}，余额${allMoney.toFixed(2)}`
               // );
-              objjj.B+=`B组本轮结束,B组重新下注，压了${B.chooseSX.toString()},花费${B.useMoney.toFixed(
+              objjj.B+=`B组重新下注，压了${B.chooseSX.toString()},花费${B.useMoney.toFixed(
                   2
                 )}，余额${allMoney.toFixed(2)};`
+                if(this.list[i-1]&&this.list[i-1].luckySX){
+                  set.delete(this.list[i-1].luckySX);
+                }
             }
-            set.delete(checkSX);
-            // console.log(`第${i}天结束,余额${allMoney.toFixed(2)}`);
+
+
+
+
+//当日生肖
+let checkNum = Math.floor(Math.random() * 49) + 1;
+            let checkSX;
+            for (let key in Obj) {
+              if (Obj[key].includes(checkNum)) {
+                checkSX = key;
+              }
+            }
+            // set.add(checkSX);
+
+            objjj.luckyNum=checkNum;
+            objjj.luckySX=checkSX;
+
+            if (A.chooseNum.length) {
+   if (A.chooseNum.includes(checkNum)) {
+                let checkMoney =
+                  Number(
+                    this.getList(hope / 2, A.chooseNum.length, A.day, mult)[
+                      A.day - 1
+                    ].pure
+                  ) +
+                  Number(
+                    this.getList(hope / 2, A.chooseNum.length, A.day, mult)[
+                      A.day - 1
+                    ].currentCB
+                  );
+                allMoney += checkMoney;
+                // console.log(
+                //   `A组中了，压了${A.chooseSX.toString()},获得${checkMoney},余额${allMoney.toFixed(
+                //     2
+                //   )}`
+                // );
+                objjj.A+=`晚上A组中了，压了${A.chooseSX.toString()},获得${checkMoney.toFixed(2)},余额${allMoney.toFixed(
+                    2
+                  )};\n`
+                for (let sx of A.chooseSX) {
+                  set.delete(sx);
+                }
+                A = {
+                  chooseNum: [],
+                  chooseSX: [],
+                  useMoney: 0,
+                  day: 0,
+                };
+                set.add(checkSX);
+              } 
+
+            }
+
+if(B.chooseNum.length){
+  if (B.chooseNum.includes(checkNum)) {
+                let checkMoney =
+                  Number(
+                    this.getList(hope / 2, B.chooseNum.length, B.day, mult)[
+                      B.day - 1
+                    ].pure
+                  ) +
+                  Number(
+                    this.getList(hope / 2, B.chooseNum.length, B.day, mult)[
+                      B.day - 1
+                    ].currentCB
+                  );
+                allMoney += checkMoney;
+                // console.log(
+                //   `B组中了，压了${B.chooseSX.toString()},获得${checkMoney},余额${allMoney.toFixed(
+                //     2
+                //   )}`
+                // );
+                objjj.B+=`晚上B组中了，压了${B.chooseSX.toString()},获得${checkMoney.toFixed(2)},余额${allMoney.toFixed(
+                    2
+                  )};\n`
+                for (let sx of B.chooseSX) {
+                  set.delete(sx);
+                }
+                B = {
+                  chooseNum: [],
+                  chooseSX: [],
+                  useMoney: 0,
+                  day: 0,
+                };
+                set.add(checkSX);
+              }
+}
+
             objjj.allMoney=allMoney.toFixed(2)
             this.list.push(objjj);
             moneyList.push(allMoney.toFixed(2))
+            // console.log(set)
             i += 1;
             if (allMoney < 0) {
               break;
             }
+            
           }
           this.maxMoney=Math.max(...moneyList)
         },
